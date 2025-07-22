@@ -1,0 +1,42 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATA_BASE")
+}
+
+model Tipo {
+  id        Int         @id @default(autoincrement())
+  tipo      String
+  elemento  Elemento[]
+}
+
+model Elemento {
+  id        Int         @id @default(autoincrement())
+  elemento  String
+  cantidad  Int
+  tipoId    Int
+  tipo      Tipo        @relation(fields: [tipoId], references: [id])
+  medidas3d Medidas3d?
+  areas     Areas?
+}
+
+model Medidas3d {
+  id          Int       @id @default(autoincrement())
+  largo       Float
+  ancho       Float
+  alto        Float
+  elementoId  Int       @unique
+  elemento    Elemento  @relation(fields: [elementoId], references: [id])
+}
+
+model Areas {
+  id          Int       @id @default(autoincrement())
+  areaUnidad  Float
+  areaTotal   Float
+  elementoId  Int       @unique
+  elemento    Elemento  @relation(fields: [elementoId], references: [id])
+}
