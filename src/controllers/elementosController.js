@@ -53,7 +53,26 @@ export const createElemento = async (req, res) => {
   }
 };
 
-export const getElementos = async (req, res) => {};
+export const getElementos = async (req, res) => {
+  try {
+    const tiposConElementos = await prisma.tipo.findMany({
+      include: {
+        elemento: {
+          include: {
+            medidas: true,
+            areas: true,
+            material: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(tiposConElementos);
+  } catch (error) {
+    console.error("Error al obtener los tipos con elementos:", error);
+    res.status(500).json({ error: "Error al obtener los elementos" });
+  }
+};
 
 export const updateElemento = async (req, res) => {};
 
