@@ -1,8 +1,13 @@
+import { empty } from "@prisma/client/runtime/library";
 import prisma from "../PrismaClient.js";
 
 export const getElemento = async (req, res) => {
   try {
     const id = Number(req.params.id);
+
+    if (id === 0 || id <= 0) {
+      return res.status(400).json({ mensaje: "No puede ser menor a cero" });
+    }
 
     const findElemento = await prisma.elemento.findUnique({
       where: { id },
@@ -28,6 +33,20 @@ export const getElemento = async (req, res) => {
 export const createElemento = async (req, res) => {
   try {
     const { elemento, cantidad, tipoId, medidas, areas, material } = req.body;
+
+    if (
+      elemento === "" ||
+      cantidad === 0 ||
+      tipoId === 0 ||
+      !Array.isArray(medidas) ||
+      medidas.length === 0 ||
+      !Array.isArray(areas) ||
+      areas.length === 0 ||
+      !Array.isArray(material) ||
+      material.length === 0
+    ) {
+      return res.status(400).json({ mensaje: "No puede haber valores vacios" });
+    }
 
     const nuevoElemento = await prisma.elemento.create({
       data: {
@@ -56,6 +75,25 @@ export const createElemento = async (req, res) => {
 export const updateElemento = async (req, res) => {
   const id = Number(req.params.id);
   const { elemento, cantidad, tipoId, medidas, areas, material } = req.body;
+
+  if (id === 0 || id <= 0) {
+    return res.status(400).json({ mensaje: "No puede ser menor a cero" });
+  }
+
+  if (
+    elemento === "" ||
+    cantidad === 0 ||
+    tipoId === 0 ||
+    !Array.isArray(medidas) ||
+    medidas.length === 0 ||
+    !Array.isArray(areas) ||
+    areas.length === 0 ||
+    !Array.isArray(material) ||
+    material.length === 0
+  ) {
+    return res.status(400).json({ mensaje: "No puede haber valores vacios" });
+  }
+
   try {
     const updatedElemento = await prisma.elemento.update({
       where: { id },
@@ -101,6 +139,10 @@ export const updateElemento = async (req, res) => {
 export const deleteElemento = async (req, res) => {
   try {
     const id = Number(req.params.id);
+
+    if (id === 0 || id <= 0) {
+      return res.status(400).json({ mensaje: "No puede ser menor a cero" });
+    }
 
     await prisma.medidas.deleteMany({ where: { elementoId: id } });
     await prisma.areas.deleteMany({ where: { elementoId: id } });
