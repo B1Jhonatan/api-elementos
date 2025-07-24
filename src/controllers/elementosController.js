@@ -138,10 +138,9 @@ export const deleteElemento = async (req, res) => {
 
     await prisma.medidas.deleteMany({ where: { elementoId: id } });
     await prisma.areas.deleteMany({ where: { elementoId: id } });
-    await prisma.material.deleteMany({ where: { elementoId: id } });
 
     const deleteElemento = await prisma.elemento.delete({
-      where: { id },
+      where: { id: id },
     });
 
     if (!deleteElemento) {
