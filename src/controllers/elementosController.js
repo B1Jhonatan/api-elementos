@@ -32,18 +32,17 @@ export const getElemento = async (req, res) => {
 
 export const createElemento = async (req, res) => {
   try {
-    const { elemento, cantidad, tipoId, medidas, areas, material } = req.body;
+    const { elemento, cantidad, tipoId, medidas, areas, materialId } = req.body;
 
     if (
       elemento === "" ||
       cantidad === 0 ||
       tipoId === 0 ||
-      !Array.isArray(medidas) ||
-      medidas.length === 0 ||
-      !Array.isArray(areas) ||
-      areas.length === 0 ||
-      !Array.isArray(material) ||
-      material.length === 0
+      !medidas ||
+      typeof medidas !== "object" ||
+      !areas ||
+      typeof areas !== "object" ||
+      materialId === 0
     ) {
       return res.status(400).json({ mensaje: "No puede haber valores vacios" });
     }
