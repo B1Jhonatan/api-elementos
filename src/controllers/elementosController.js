@@ -72,24 +72,25 @@ export const createElemento = async (req, res) => {
 
 export const updateElemento = async (req, res) => {
   const id = Number(req.params.id);
-  const { elemento, cantidad, tipoId, medidas, areas, material } = req.body;
+  const { elemento, cantidad, tipoId, medidas, areas, materialId } = req.body;
 
-  if (id === 0 || id <= 0) {
-    return res.status(400).json({ mensaje: "No puede ser menor a cero" });
+  if (id <= 0) {
+    return res
+      .status(400)
+      .json({ mensaje: "El ID no puede ser menor o igual a cero" });
   }
 
   if (
-    elemento === "" ||
+    !elemento ||
     cantidad === 0 ||
     tipoId === 0 ||
-    !Array.isArray(medidas) ||
-    medidas.length === 0 ||
-    !Array.isArray(areas) ||
-    areas.length === 0 ||
-    !Array.isArray(material) ||
-    material.length === 0
+    !medidas ||
+    typeof medidas !== "object" ||
+    !areas ||
+    typeof areas !== "object" ||
+    materialId === 0
   ) {
-    return res.status(400).json({ mensaje: "No puede haber valores vacios" });
+    return res.status(400).json({ mensaje: "No puede haber valores vacíos" });
   }
 
   try {
@@ -99,20 +100,25 @@ export const updateElemento = async (req, res) => {
         elemento,
         cantidad,
         tipoId,
-
-        medidas: medidas
-          ? {
-              deleteMany: {},
-              create: medidas,
-            }
-          : undefined,
-        areas: areas
-          ? {
-              deleteMany: {},
-              create: areas,
-            }
-          : undefined,
         materialId,
+        medidas: {
+          upsert: {
+            update: medidas,
+            create: {
+              ...medidas,
+              elementoId: id,
+            },
+          },
+        },
+        areas: {
+          upsert: {
+            update: areas,
+            create: {
+              ...areas,
+              elementoId: id,
+            },
+          },
+        },
       },
       include: {
         medidas: true,
@@ -124,7 +130,7 @@ export const updateElemento = async (req, res) => {
     res.status(200).json(updatedElemento);
   } catch (error) {
     console.error("Error updating elemento:", error);
-    res.status(500).json({ error: "Error updating elemento" });
+    res.status(500).json({ error: "Error al actualizar el elemento" });
   }
 };
 

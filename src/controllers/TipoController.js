@@ -2,15 +2,12 @@ import prisma from "../PrismaClient.js";
 
 export const getTiposElementos = async (req, res) => {
   try {
-    const tiposConElementos = await prisma.tipo.findMany({
+    const tiposConElementos = await prisma.elemento.findMany({
       include: {
-        elemento: {
-          include: {
-            medidas: true,
-            areas: true,
-            material: true,
-          },
-        },
+        medidas: true,
+        areas: true,
+        material: true,
+        tipo: true,
       },
     });
 
