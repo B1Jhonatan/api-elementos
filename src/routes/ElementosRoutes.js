@@ -2,13 +2,15 @@ import express from "express";
 import {
   createElemento,
   getElemento,
-  getElementos,
-} from "../controllers/ElementosController.js";
+  updateElemento,
+  deleteElemento,
+} from "../controllers/elementosController.js";
 
 const router = express.Router();
 
 router.post("/elemento", createElemento);
 router.get("/elemento/:id", getElemento);
-router.get("/elemento", getElementos);
+router.put("/elemento/:id", updateElemento);
+router.delete("/elemento/:id", deleteElemento);
 
 export default router;
