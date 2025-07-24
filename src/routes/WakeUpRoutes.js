@@ -1,5 +1,5 @@
 import express from "express";
-import { wakeUp } from "../controllers/WakeUpController";
+import { wakeUp } from "../controllers/WakeUpController.js";
 
 const router = express.Router();
 
