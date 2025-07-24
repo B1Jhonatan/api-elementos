@@ -55,12 +55,11 @@ export const createElemento = async (req, res) => {
         tipoId,
         medidas: medidas ? { create: medidas } : undefined,
         areas: areas ? { create: areas } : undefined,
-        material: material ? { create: material } : undefined,
+        materialId,
       },
       include: {
         medidas: true,
         areas: true,
-        material: true,
         tipo: true,
       },
     });
@@ -114,17 +113,11 @@ export const updateElemento = async (req, res) => {
               create: areas,
             }
           : undefined,
-        material: material
-          ? {
-              deleteMany: {},
-              create: material,
-            }
-          : undefined,
+        materialId,
       },
       include: {
         medidas: true,
         areas: true,
-        material: true,
         tipo: true,
       },
     });
