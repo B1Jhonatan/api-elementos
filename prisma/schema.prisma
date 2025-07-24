@@ -22,7 +22,8 @@ model Elemento {
   tipo      Tipo        @relation(fields: [tipoId], references: [id])
   medidas   Medidas?
   areas     Areas?
-  material  Material?
+  materialId Int
+  material  Material  @relation(fields: [materialId], references: [id])
 }
 
 model Medidas {
@@ -45,6 +46,5 @@ model Areas {
 model Material {
   id          Int @id @default(autoincrement())
   material    String
-  elementoId  Int       @unique
-  elemento    Elemento  @relation(fields: [elementoId], references: [id])
+  elemento    Elemento[]
 }
