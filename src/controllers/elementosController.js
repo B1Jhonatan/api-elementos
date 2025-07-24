@@ -74,6 +74,7 @@ export const updateElemento = async (req, res) => {
   const id = Number(req.params.id);
   const { elemento, cantidad, tipoId, medidas, areas, materialId } = req.body;
 
+  // Validaciones (mantenidas igual)
   if (id <= 0) {
     return res
       .status(400)
@@ -103,19 +104,29 @@ export const updateElemento = async (req, res) => {
         materialId,
         medidas: {
           upsert: {
-            update: medidas,
+            where: { elementoId: id },
+            update: {
+              largo: medidas.largo,
+              ancho: medidas.ancho,
+              alto: medidas.alto,
+            },
             create: {
-              ...medidas,
-              elementoId: id,
+              largo: medidas.largo,
+              ancho: medidas.ancho,
+              alto: medidas.alto,
             },
           },
         },
         areas: {
           upsert: {
-            update: areas,
+            where: { elementoId: id },
+            update: {
+              areaUnidad: areas.areaUnidad,
+              areaTotal: areas.areaTotal,
+            },
             create: {
-              ...areas,
-              elementoId: id,
+              areaUnidad: areas.areaUnidad,
+              areaTotal: areas.areaTotal,
             },
           },
         },
